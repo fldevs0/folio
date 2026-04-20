@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FLDevs - Bebedouro | Soluções Digitais & Automação</title>
+    <meta name="description" content="Transformando Eficiência em Lucro. Portfólio de Projetos Reais." />
+
+    <!-- Favicon -->
+    <!-- Corrigido: O tipo de imagem foi ajustado para 'image/png' e adicionado o 'apple-touch-icon' para compatibilidade com iOS -->
+    <link rel="icon" href="favicon.jpeg" type="image/png">
+    <link rel="apple-touch-icon" href="favicon.jpeg">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        metallic: {
+                            100: '#F3F4F6', 200: '#E5E7EB', 300: '#D1D5DB', 400: '#9CA3AF',
+                            500: '#6B7280', 600: '#4B5563', 700: '#374151', 800: '#1F2937', 900: '#111827',
+                        },
+                        gold: {
+                            100: '#FEF9C3', 400: '#FACC15', 500: '#EAB308', 600: '#CA8A04', 700: '#A16207', 900: '#713F12'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shimmer': 'shimmer 2.5s infinite',
+                        'shine': 'shine 8s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+                    },
+                    keyframes: {
+                        shimmer: {
+                            '100%': { transform: 'translateX(100%)' },
+                        },
+                        shine: {
+                            '0%': { backgroundPosition: '100% center' },
+                            '40%': { backgroundPosition: '0% center' },
+                            '100%': { backgroundPosition: '0% center' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Critical Theme Logic in Head to Prevent FOUC (Flash of Unstyled Content) -->
+    <script>
+        // Site configurado para iniciar sempre em Light Mode.
+    </script>
+
+    <style type="text/tailwindcss">
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #6b7280; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+
+        /* Chrome Effect Base */
+        .chrome-text {
+            color: transparent;
+            display: inline-block;
+            -webkit-background-clip: text;
+            background-clip: text;
+            background-size: 300% auto;
+            will-change: background-position;
+            background-image: linear-gradient(90deg, #4B5563 0%, #9CA3AF 25%, #FFFFFF 50%, #9CA3AF 75%, #4B5563 100%);
+        }
+
+        /* Reveal Animation Classes - Refined for "Metallic/Premium" feel */
+        .reveal {
+            opacity: 0;
+            filter: blur(4px);
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
+            will-change: opacity, transform, filter;
+        }
+        .reveal.active {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0);
+        }
+
+        /* Performance Optimization */
+        .is-paused {
+            animation-play-state: paused !important;
+        }
+
+        /* Stagger Delays */
+        .stagger-1 { transition-delay: 150ms; }
+        .stagger-2 { transition-delay: 300ms; }
+        .stagger-3 { transition-delay: 450ms; }
+        .stagger-4 { transition-delay: 600ms; }
+
+        /* Theme Toggle Icon Animations */
+        .theme-btn-container {
+            position: relative;
+            width: 20px;
+            height: 20px;
+        }
+        .theme-icon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* State: Icon is hidden (scaled down, rotated, invisible) */
+        .theme-icon-hidden {
+            opacity: 0;
+            transform: rotate(180deg) scale(0);
+        }
+        /* State: Icon is visible (normal scale, no rotation, visible) */
+        .theme-icon-visible {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+
+        /* Quiz Animations */
+        .quiz-step { display: none; animation: fadeIn 0.5s; }
+        .quiz-step.active-step { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Grain Texture Overlay */
+        .bg-grain {
+            position: relative;
+        }
+        .bg-grain::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            filter: contrast(150%) brightness(100%);
+        }
+    </style>
+
+    <style>
+        /* FAQ Accordion Animation */
+        details > summary {
+            list-style: none; /* Remove default arrow */
+        }
+        details > summary::-webkit-details-marker {
+            display: none; /* Remove default arrow for Safari */
+        }
+        details .faq-answer {
+            overflow: hidden;
+            /* Duração aumentada para uma animação mais lenta e natural */
+            transition: max-height 0.7s ease-in-out, 
+                        padding-top 0.7s ease-in-out,
+                        padding-bottom 0.7s ease-in-out,
+                        border-top-width 0.5s ease-in-out;
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            border-top-width: 0;
+        }
+        details[open] .faq-answer {
+            max-height: 250px; /* Ajuste se o conteúdo for maior */
+            padding-top: 1rem; /* pt-4 */
+            padding-bottom: 1rem; /* pb-4 */
+            border-top-width: 1px;
+        }
+
+        /* Hide scrollbar for gallery but allow functionality */
+        #project-modal-gallery::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-neutral-950 dark:text-gray-100 transition-colors duration-500 ease-in-out antialiased overflow-x-hidden font-sans selection:bg-gold-500/30 selection:text-gold-700 dark:selection:text-gold-300 bg-grain">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out bg-transparent border-b border-transparent py-4">
+        <div class="w-full px-4 md:px-8 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2 group">
+                <img src="logo.png" alt="Logo FLDevs" class="h-24 w-auto object-contain -my-8" />
+            
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#projects" class="relative text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-gold-500 after:transition-all after:duration-300 hover:after:w-full focus:outline-none focus-visible:after:w-full">Projetos</a>
+                <a href="#testimonials" class="relative text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-gold-500 after:transition-all after:duration-300 hover:after:w-full focus:outline-none focus-visible:after:w-full">Depoimentos</a>
+                <a href="#pricing" class="relative text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-gold-500 after:transition-all after:duration-300 hover:after:w-full focus:outline-none focus-visible:after:w-full">Planos</a>
+                <a href="#faq" class="relative text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-gold-500 after:transition-all after:duration-300 hover:after:w-full focus:outline-none focus-visible:after:w-full">FAQ</a>
+                <a href="#contact" class="relative text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-gold-500 after:transition-all after:duration-300 hover:after:w-full focus:outline-none focus-visible:after:w-full">Contato</a>
+                
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors duration-300 text-neutral-600 dark:text-gray-300" aria-label="Alternar Tema">
+                    <div class="theme-btn-container">
+                        <!-- Sun Icon (Visible in Dark Mode) -->
+                        <svg id="icon-sun" class="theme-icon w-5 h-5 theme-icon-visible" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <!-- Moon Icon (Visible in Light Mode) -->
+                        <svg id="icon-moon" class="theme-icon w-5 h-5 theme-icon-hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Mobile Toggle -->
+            <div class="flex items-center gap-4 md:hidden">
+                <button id="theme-toggle-mobile" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors duration-300 text-neutral-600 dark:text-gray-300" aria-label="Alternar Tema Mobile">
+                    <div class="theme-btn-container">
+                        <svg id="icon-sun-mobile" class="theme-icon w-5 h-5 theme-icon-visible" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="icon-moon-mobile" class="theme-icon w-5 h-5 theme-icon-hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </div>
+                </button>
+                <button id="menu-toggle" class="text-neutral-900 dark:text-white" aria-label="Abrir Menu">
+                    <svg id="icon-menu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    <svg id="icon-close" class="hidden w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+        </div>
+
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <div class="relative flex justify-center pt-16 md:pt-20 pb-0 overflow-hidden bg-white dark:bg-neutral-950">
+            <!-- Background FX with Parallax IDs -->
+            <div id="hero-blob-1" class="absolute top-1/4 -left-20 w-96 h-96 bg-gold-500/10 dark:bg-gold-500/5 rounded-full blur-[120px] pointer-events-none animate-pulse-slow mix-blend-multiply dark:mix-blend-lighten will-change-transform transition-colors duration-700"></div>
+            <div id="hero-blob-2" class="absolute bottom-0 -right-20 w-[500px] h-[500px] bg-neutral-200/20 dark:bg-white/5 rounded-full blur-[120px] pointer-events-none animate-pulse-slow will-change-transform transition-colors duration-700"></div>
+
+            <section class="section-observe py-0 md:pt-0 md:pb-20 px-4 md:px-8 w-full relative z-10 flex flex-col items-center bg-gradient-to-b from-transparent to-gray-50 dark:to-neutral-900/50">
+                <div class="w-full text-center space-y-4 md:space-y-6">
+                    <!-- Title -->
+                    <h1 class="reveal text-5xl md:text-7xl lg:text-8xl font-display font-extrabold leading-tight tracking-tighter transition-colors duration-500">
+                        <span class="chrome-text animate-shine drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]" style="animation-delay: 0s;">
+                            Soluções Digitais &
+                        </span>
+                        <br />
+                        <span class="relative chrome-text animate-shine pb-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]" style="animation-delay: 1.5s;">
+                            Automações
+                            <!-- Animated Metallic Energy Line -->
+                            <span class="absolute bottom-1 left-0 w-full h-[1.5px] bg-gradient-to-r from-transparent via-gray-400 via-white via-gray-400 to-transparent bg-[length:300%_auto] animate-shine opacity-100 shadow-[0_0_12px_rgba(255,255,255,0.3)]" style="animation-delay: 1.5s;"></span>
+                        </span>
+                    </h1>
+
+                    <!-- Subtitle -->
+                    <p class="reveal stagger-1 text-lg md:text-2xl max-w-2xl mx-auto leading-relaxed font-light text-gray-600 dark:text-gray-400 transition-colors duration-500">
+                        Criamos Landing Pages que <strong class="font-bold text-neutral-900 dark:text-white">vendem</strong> e Sistemas Web que <strong class="font-bold text-neutral-900 dark:text-white">otimizam</strong> sua operação.
+                    </p>
+
+                    <!-- Buttons -->
+                    <div class="reveal stagger-2 flex flex-col sm:flex-row items-center justify-center gap-5 pt-4">
+                        <a href="#projects" class="w-full sm:w-auto">
+                            <div class="w-full relative inline-flex items-center justify-center font-display font-bold tracking-wide transition-all duration-300 rounded-lg px-8 py-3.5 focus:outline-none focus:ring-2 focus:ring-offset-2 transform active:scale-95 overflow-hidden group bg-gradient-to-br from-neutral-700 via-neutral-900 to-black dark:from-gray-100 dark:via-gray-300 dark:to-gray-100 text-white dark:text-neutral-900 shadow-xl shadow-neutral-900/20 dark:shadow-white/5 border border-white/10 dark:border-transparent hover:shadow-2xl hover:-translate-y-1 h-14 text-lg">
+                                <div class="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-shimmer"></div>
+                                <span class="relative flex items-center">Explore Nossos Projetos <svg class="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></span>
+                            </div>
+                        </a>
+                        
+                        <a href="https://wa.me/5517991744797" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto">
+                            <div class="w-full relative inline-flex items-center justify-center font-display font-bold tracking-wide transition-all duration-300 rounded-lg px-8 py-3.5 focus:outline-none focus:ring-2 focus:ring-offset-2 transform active:scale-95 overflow-hidden group bg-transparent border-2 border-neutral-800 dark:border-gray-200 text-neutral-800 dark:text-gray-100 hover:bg-[#25D366] hover:border-[#25D366] hover:text-white dark:hover:bg-[#25D366] dark:hover:border-[#25D366] dark:hover:text-white shadow-sm hover:shadow-lg h-14 text-lg">
+                                <span class="relative flex items-center transition-all duration-300 group-hover:opacity-0 group-hover:scale-50">Fale Conosco no WhatsApp <svg class="ml-2 h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.506-.669-.516-.173-.009-.371-.009-.57-.009-.198 0-.52.074-.792.372-.272.297-1.04 1.017-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"></path></svg></span>
+                                <span class="absolute inset-0 flex items-center justify-center opacity-0 scale-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.506-.669-.516-.173-.009-.371-.009-.57-.009-.198 0-.52.074-.792.372-.272.297-1.04 1.017-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="reveal stagger-3 pt-4 flex flex-col items-center gap-2">
+                        <button id="open-quiz-modal" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gold-600 dark:hover:text-gold-500 transition-colors duration-300 underline underline-offset-4">
+                            Não sabe por onde começar? Faça um diagnóstico rápido.
+                        </button>
+                        <a href="#projects" aria-label="Rolar para baixo" class="text-gray-500 dark:text-gray-400 hover:text-gold-500 transition-colors duration-300 animate-bounce">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section-observe py-24 px-4 md:px-8 w-full relative overflow-hidden bg-gray-50 dark:bg-neutral-900/50 transition-colors duration-500">
+            <div class="w-full relative z-10">
+                <div class="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div class="max-w-2xl">
+                        <div class="reveal flex items-center gap-2 mb-2">
+                            <div class="h-0.5 w-12 bg-gold-600"></div>
+                            <span class="text-sm font-bold uppercase tracking-wider text-gold-600">Portfólio</span>
+                        </div>
+                        <h2 class="reveal stagger-1 text-4xl md:text-5xl font-display font-bold text-neutral-900 dark:text-white mb-4 transition-colors duration-500">
+                            Projetos Recentes
+                        </h2>
+                        <p class="reveal stagger-2 text-lg text-gray-600 dark:text-gray-400 transition-colors duration-500">
+                            Oficinas Mecânicas, Barbearias, Prestadores de Serviços, e muito mais...
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+                    <!-- Project 1 -->
+                    <div data-project-id="1" class="project-card reveal group relative bg-white dark:bg-neutral-900 rounded-2xl overflow-hidden border border-gray-200 dark:border-neutral-800 transition-all duration-500 hover:shadow-2xl hover:shadow-neutral-900/10 dark:hover:shadow-white/5 hover:-translate-y-2 flex flex-col h-full cursor-pointer hover:border-gold-500/50">
+                        <div class="relative h-64 overflow-hidden bg-black transition-colors duration-500 flex items-center justify-center p-10">
+                            <!-- 🔴 AQUI (CARD 1): Coloque o caminho da sua foto no 'src' abaixo (ex: src="imagens/foto-barbearia.jpg") -->
+                            <img src="barber_capa.png" alt="DiSteffano Barbearia" class="max-w-full h-auto max-h-full object-contain transition-transform duration-700 ease-out group-hover:scale-110" loading="lazy" />
+                        </div>
+                        <div class="p-8 flex flex-col flex-grow relative z-10 bg-white dark:bg-neutral-900 transition-colors duration-500">
+                            <h3 class="text-2xl font-bold font-display text-neutral-900 dark:text-white mb-3 group-hover:text-gold-600 transition-colors duration-300">DiSteffano Barbearia</h3>
+                            <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-6 flex-grow transition-colors duration-500">Uma solução robusta que elevou o padrão de atendimento e a organização da barbearia. Com agendamento autônomo e gestão financeira, eliminamos o gargalo das mensagens manuais.</p>
+                            <!-- Key Result -->
+                            <div class="mt-auto pt-4 border-t border-gray-100 dark:border-neutral-800/50">
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-6 h-6 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                                    <div>
+                                        <span class="text-xs font-bold text-green-500 uppercase tracking-wider">Resultado</span>
+                                        <p class="text-sm text-neutral-800 dark:text-gray-200 font-semibold">Redução de 85% no tempo de gestão manual e eliminação total de conflitos de horários.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div data-project-id="2" class="project-card reveal stagger-1 group relative bg-white dark:bg-neutral-900 rounded-2xl overflow-hidden border border-gray-200 dark:border-neutral-800 transition-all duration-500 hover:shadow-2xl hover:shadow-neutral-900/10 dark:hover:shadow-white/5 hover:-translate-y-2 flex flex-col h-full cursor-pointer hover:border-gold-500/50">
+                        <div class="relative h-64 overflow-hidden bg-black transition-colors duration-500 flex items-center justify-center p-1 pl-12">
+                            <!-- 🔴 AQUI (CARD 2): Coloque o caminho da sua foto no 'src' abaixo (ex: src="imagens/foto-oficina.jpg") -->
+                            <img src="fr_logo.png" alt="FR - Oficina Mecânica" class="max-w-full h-auto max-h-full object-contain transition-transform duration-700 ease-out group-hover:scale-110" loading="lazy" />
+                        </div>
+                        <div class="p-8 flex flex-col flex-grow relative z-10 bg-white dark:bg-neutral-900 transition-colors duration-500">
+                            <h3 class="text-2xl font-bold font-display text-neutral-900 dark:text-white mb-3 group-hover:text-gold-600 transition-colors duration-300">FR Fernando & Rodrigo</h3>
+                            <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-6 flex-grow transition-colors duration-500">Uma solução completa que digitalizou e organizou processos que antes eram inexistentes. Com controle de estoque rigoroso, histórico detalhado de veículos e gestão de O.S., trouxemos clareza total e o controle absoluto da oficina para as mãos do proprietário.</p>
+                            <!-- Key Result -->
+                            <div class="mt-auto pt-4 border-t border-gray-100 dark:border-neutral-800/50">
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-6 h-6 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                                    <div>
+                                        <span class="text-xs font-bold text-green-500 uppercase tracking-wider">Resultado</span>
+                                        <p class="text-sm text-neutral-800 dark:text-gray-200 font-semibold">Agilidade na aprovação de orçamentos e controle financeiro total.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div data-project-id="3" class="project-card reveal stagger-2 group relative bg-white dark:bg-neutral-900 rounded-2xl overflow-hidden border border-gray-200 dark:border-neutral-800 transition-all duration-500 hover:shadow-2xl hover:shadow-neutral-900/10 dark:hover:shadow-white/5 hover:-translate-y-2 flex flex-col h-full cursor-pointer hover:border-gold-500/50">
+                        <div class="relative h-64 overflow-hidden bg-black transition-colors duration-500 flex items-center justify-center p-10">
+                            <!-- 🔴 AQUI (CARD 3): Coloque o caminho da sua foto no 'src' abaixo (ex: src="imagens/foto-landing-page.jpg") -->
+                            <img src="nail_logo.png" alt="Bella Studio" class="max-w-full h-auto max-h-full object-contain transition-transform duration-700 ease-out group-hover:scale-110" loading="lazy" />
+                        </div>
+                        <div class="p-8 flex flex-col flex-grow relative z-10 bg-white dark:bg-neutral-900 transition-colors duration-500">
+                            <h3 class="text-2xl font-bold font-display text-neutral-900 dark:text-white mb-3 group-hover:text-gold-600 transition-colors duration-300">Bella Studio</h3>
+                            <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-6 flex-grow transition-colors duration-500">Landing Page de alta conversão projetada para transformar o engajamento das redes sociais em agendamentos reais. Uma vitrine digital estratégica que qualifica leads e automatiza a captação de clientes.</p>
+                            <!-- Key Result -->
+                            <div class="mt-auto pt-4 border-t border-gray-100 dark:border-neutral-800/50">
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-6 h-6 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                                    <div>
+                                        <span class="text-xs font-bold text-green-500 uppercase tracking-wider">Resultado</span>
+                                        <p class="text-sm text-neutral-800 dark:text-gray-200 font-semibold">Fim das interrupções por dúvidas repetitivas e aumento na taxa de conversão com agendamentos pré-pagos.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Soluções para todos os segmentos (from teste.html trust section, Tailwind-styled) -->
+        <section class="section-observe py-20 px-4 md:px-8 w-full relative bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-neutral-900/50 dark:via-neutral-950 dark:to-neutral-900/30 transition-colors duration-500 border-y border-gray-200/50 dark:border-neutral-800/50">
+            <div class="max-w-4xl mx-auto text-center">
+                <p class="reveal text-xs md:text-sm font-bold uppercase tracking-widest text-gold-600 dark:text-gold-500 mb-6 block transition-colors duration-500">
+                    Soluções para todos os segmentos
+                </p>
+                <div class="reveal stagger-2 flex flex-wrap justify-center items-center gap-3 md:gap-4 max-w-3xl mx-auto">
+                    <span class="px-4 py-2 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm rounded-full text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200/50 dark:border-neutral-800/50 hover:bg-white dark:hover:bg-neutral-900 hover:border-gold-500/50 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">Barbearias</span>
+                    <span class="px-4 py-2 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm rounded-full text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200/50 dark:border-neutral-800/50 hover:bg-white dark:hover:bg-neutral-900 hover:border-gold-500/50 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">Oficinas Mecânicas</span>
+                    <span class="px-4 py-2 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm rounded-full text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200/50 dark:border-neutral-800/50 hover:bg-white dark:hover:bg-neutral-900 hover:border-gold-500/50 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">Nail Designers</span>
+                    <span class="px-4 py-2 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm rounded-full text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200/50 dark:border-neutral-800/50 hover:bg-white dark:hover:bg-neutral-900 hover:border-gold-500/50 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">Clínicas</span>
+                    <span class="px-4 py-2 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm rounded-full text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200/50 dark:border-neutral-800/50 hover:bg-white dark:hover:bg-neutral-900 hover:border-gold-500/50 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">Restaurantes</span>
+                    <span class="px-4 py-2 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm rounded-full text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200/50 dark:border-neutral-800/50 hover:bg-white dark:hover:bg-neutral-900 hover:border-gold-500/50 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">Imobiliárias</span>
+                    <span class="px-4 py-2 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm rounded-full text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200/50 dark:border-neutral-800/50 hover:bg-white dark:hover:bg-neutral-900 hover:border-gold-500/50 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">Escritórios</span>
+                    <span class="px-4 py-2 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm rounded-full text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200/50 dark:border-neutral-800/50 hover:bg-white dark:hover:bg-neutral-900 hover:border-gold-500/50 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">Prestadores de Serviço</span>
+                    <span class="px-4 py-2 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm rounded-full text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200/50 dark:border-neutral-800/50 hover:bg-white dark:hover:bg-neutral-900 hover:border-gold-500/50 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">Lash Studios</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section (enhanced aesthetics from teste.html) -->
+        <section id="testimonials" class="section-observe py-24 px-4 md:px-8 w-full relative overflow-hidden bg-gray-50 dark:bg-neutral-900/20 transition-colors duration-500">
+            <div class="w-full relative z-10">
+                <div class="text-center mb-16">
+                    <span class="reveal text-xs font-bold uppercase tracking-widest text-gold-600 dark:text-gold-500 mb-2 block transition-colors duration-500">O Que Dizem</span>
+                    <h2 class="reveal stagger-1 text-3xl md:text-4xl font-display font-bold text-neutral-900 dark:text-white transition-colors duration-500">
+                        Resultados Comprovados
+                    </h2>
+                </div>
+
+                <div class="reveal stagger-2 relative px-2">
+                    <!-- Navigation Buttons -->
+                    <button id="prevBtn" class="flex absolute left-0 top-1/2 -translate-y-1/2 z-20 p-2 md:p-3 rounded-full bg-white/90 dark:bg-neutral-900/90 shadow-lg text-neutral-900 dark:text-neutral-100 hover:text-gold-600 focus:outline-none transition-all disabled:opacity-50 border border-neutral-200/50 dark:border-neutral-800/50 backdrop-blur-sm hover:shadow-xl hover:bg-white dark:hover:bg-neutral-900 hover:border-gold-500/50" aria-label="Anterior">
+                        <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <button id="nextBtn" class="flex absolute right-0 top-1/2 -translate-y-1/2 z-20 p-2 md:p-3 rounded-full bg-white/90 dark:bg-neutral-900/90 shadow-lg text-neutral-900 dark:text-neutral-100 hover:text-gold-600 focus:outline-none transition-all disabled:opacity-50 border border-neutral-200/50 dark:border-neutral-800/50 backdrop-blur-sm hover:shadow-xl hover:bg-white dark:hover:bg-neutral-900 hover:border-gold-500/50" aria-label="Próximo">
+                         <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+
+                    <!-- Carousel Track Wrapper -->
+                    <div class="overflow-hidden mx-auto py-4">
+                        <div id="slider-track" class="flex transition-transform duration-500 ease-out cursor-grab active:cursor-grabbing touch-pan-y">
+                            <!-- Items will be injected by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div id="pagination" class="flex justify-center gap-2 mt-8">
+                        <!-- Dots will be injected by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section (New) -->
+        <section id="pricing" class="section-observe py-24 px-4 md:px-8 w-full relative bg-gradient-to-b from-gray-50 to-white dark:from-neutral-900/20 dark:to-neutral-950 transition-colors duration-500">
+            <div class="w-full relative z-10">
+                <div class="text-center mb-16">
+                    <span class="reveal text-xs font-bold uppercase tracking-widest text-gold-600 dark:text-gold-500 mb-2 block">Orçamento Inteligente</span>
+                    <h2 class="reveal stagger-1 text-4xl md:text-5xl font-display font-bold text-neutral-900 dark:text-white mb-6">
+                        Projetos 100% Exclusivos
+                    </h2>
+                    <p class="reveal stagger-2 text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-lg">
+                        Não acreditamos em fórmulas prontas. Cada linha de código e cada pixel é desenhado do zero para o seu negócio. 
+                        Nossa precificação é baseada em três pilares fundamentais:
+                    </p>
+                </div>
+
+                <!-- Pillars of Value - Why variable prices? -->
+                <div class="reveal stagger-3 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-20">
+                    <div class="p-6 rounded-2xl bg-gray-50 dark:bg-neutral-900/50 border border-gray-100 dark:border-neutral-800 text-center group hover:border-gold-500/50 transition-all duration-300">
+                        <div class="w-12 h-12 bg-gold-500/10 text-gold-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h4 class="font-bold text-neutral-900 dark:text-white mb-2">Tempo de Execução</h4>
+                        <p class="text-sm text-gray-500">Estimativa precisa de horas técnicas dedicadas ao seu projeto.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-gray-50 dark:bg-neutral-900/50 border border-gray-100 dark:border-neutral-800 text-center group hover:border-gold-500/50 transition-all duration-300">
+                        <div class="w-12 h-12 bg-gold-500/10 text-gold-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        </div>
+                        <h4 class="font-bold text-neutral-900 dark:text-white mb-2">Complexidade Técnica</h4>
+                        <p class="text-sm text-gray-500">Nível de integrações, automações e funcionalidades personalizadas.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-gray-50 dark:bg-neutral-900/50 border border-gray-100 dark:border-neutral-800 text-center group hover:border-gold-500/50 transition-all duration-300">
+                        <div class="w-12 h-12 bg-gold-500/10 text-gold-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                        </div>
+                        <h4 class="font-bold text-neutral-900 dark:text-white mb-2">Design Personalizado</h4>
+                        <p class="text-sm text-gray-500">Interface única desenhada para converter o seu público específico.</p>
+                    </div>
+                </div>
+
+                <!-- Cards Container (Smaller & Balanced) -->
+                <div class="reveal stagger-3 max-w-4xl mx-auto flex flex-col md:flex-row items-stretch justify-center gap-6 pt-10">
+                    
+                    <!-- Card 1: Portfólio & Autoridade -->
+                    <div class="w-full md:w-[380px] flex flex-col bg-white dark:bg-neutral-900 rounded-3xl border border-gray-200 dark:border-neutral-800 p-8 shadow-lg hover:border-gold-500/60 hover:shadow-[0_0_20px_rgba(234,179,8,0.15)] transition-all duration-1000 group">
+                        <div class="mb-8 text-center">
+                            <h3 class="text-2xl font-display font-extrabold text-neutral-900 dark:text-white uppercase tracking-widest">Portfólio Digital</h3>
+                            <div class="w-12 h-1 bg-gradient-to-r from-gold-400 to-gold-600 mx-auto mt-3 rounded-full shadow-[0_2px_10px_rgba(234,179,8,0.3)]"></div>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-8 leading-relaxed md:min-h-[100px] text-justify indent-4">
+                            Sua vitrine 24h por dia. Construímos sites que não apenas mostram seu trabalho, mas convencem o cliente de que você é a escolha certa.
+                        </p>
+                        <div class="mb-8 p-4 rounded-xl bg-gray-50 dark:bg-neutral-800/40 border border-gray-100 dark:border-neutral-800">
+                            <span class="text-[10px] font-black text-gold-600 dark:text-gold-500 uppercase tracking-[0.2em] block mb-1">Ideal para</span>
+                            <p class="text-sm font-bold text-neutral-800 dark:text-gray-200 md:min-h-[40px]">Profissionais autônomos, Instituições, Escritórios e Prestadores de Serviço.</p>
+                        </div>
+                        <ul class="space-y-3 mb-8 flex-grow">
+                            <li class="flex items-center text-sm text-gray-600 dark:text-gray-400"><svg class="w-5 h-5 text-gold-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Interface sob Medida (UI/UX)</li>
+                            <li class="flex items-center text-sm text-gray-600 dark:text-gray-400"><svg class="w-5 h-5 text-gold-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Estratégia de SEO Integrada</li>
+                            <li class="flex items-center text-sm text-gray-600 dark:text-gray-400"><svg class="w-5 h-5 text-gold-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Hospedagem Rápida e Estável</li>
+                        </ul>
+                        <a href="https://wa.me/5517991744797?text=Quero%20melhorar%20minha%20presen%C3%A7a%20digital." target="_blank" class="block w-full py-4 text-center rounded-xl border-2 border-neutral-900 dark:border-white text-neutral-900 dark:text-white font-bold hover:bg-neutral-900 hover:text-white dark:hover:bg-white dark:hover:text-neutral-900 transition-all duration-300">
+                            Solicitar Orçamento
+                        </a>
+                    </div>
+
+                    <!-- Card 2: Sistemas & Automação -->
+                    <div class="w-full md:w-[380px] flex flex-col bg-white dark:bg-neutral-900 rounded-3xl border border-gray-200 dark:border-neutral-800 p-8 shadow-lg hover:border-gold-500/60 hover:shadow-[0_0_20px_rgba(234,179,8,0.15)] transition-all duration-1000 group">
+                        <div class="mb-8 text-center">
+                            <h3 class="text-2xl font-display font-extrabold text-neutral-900 dark:text-white uppercase tracking-widest">Sistemas Web</h3>
+                            <div class="w-12 h-1 bg-gradient-to-r from-gold-400 to-gold-600 mx-auto mt-3 rounded-full shadow-[0_2px_10px_rgba(234,179,8,0.3)]"></div>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-8 leading-relaxed md:min-h-[100px] text-justify indent-4">
+                            Desenvolvemos ferramentas sob medida para organizar sua agenda, estoque ou processos. Chega de planilhas confusas e mensagens perdidas, deixe o sistema trabalhar por você.
+                        </p>
+                        <div class="mb-8 p-4 rounded-xl bg-gray-50 dark:bg-neutral-800/40 border border-gray-100 dark:border-neutral-800">
+                            <span class="text-[10px] font-black text-gold-600 dark:text-gold-500 uppercase tracking-[0.2em] block mb-1">Ideal para</span>
+                            <p class="text-sm font-bold text-neutral-800 dark:text-gray-200 md:min-h-[40px]">Comércios, Clínicas e Empresas com processos manuais repetitivos.</p>
+                        </div>
+                        <ul class="space-y-3 mb-8 flex-grow">
+                            <li class="flex items-center text-sm text-gray-600 dark:text-gray-400"><svg class="w-5 h-5 text-gold-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Sistemas de Agendamento</li>
+                            <li class="flex items-center text-sm text-gray-600 dark:text-gray-400"><svg class="w-5 h-5 text-gold-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Dashboards de Gestão em Tempo Real</li>
+                            <li class="flex items-center text-sm text-gray-600 dark:text-gray-400"><svg class="w-5 h-5 text-gold-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Integração com API's e WhatsApp</li>
+                        </ul>
+                        <a href="https://wa.me/5517991744797?text=Preciso%20de%20um%20sistema%20personalizado." target="_blank" class="block w-full py-4 text-center rounded-xl border-2 border-neutral-900 dark:border-white text-neutral-900 dark:text-white font-bold hover:bg-neutral-900 hover:text-white dark:hover:bg-white dark:hover:text-neutral-900 transition-all duration-300">
+                            Solicitar Orçamento
+                        </a>
+                    </div>
+                </div>
+
+                <!-- CTA Footer Text -->
+                <div class="reveal stagger-4 mt-16 text-center">
+                    <p class="text-gray-500 dark:text-gray-400 font-medium italic">
+                        Nenhum se adequa às suas necessidades? 
+                        <a href="https://wa.me/5517991744797?text=Ol%C3%A1%2C%20tenho%20uma%20ideia%20espec%C3%ADfica%20de%20projeto." target="_blank" rel="noopener noreferrer" class="text-gold-600 dark:text-gold-500 border-b border-gold-500/30 hover:border-gold-500 transition-all ml-1">
+                            Converse conosco para criarmos algo único
+                        </a>.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FAQ Section (New Suggestion) -->
+        <section id="faq" class="section-observe py-24 px-4 md:px-8 w-full relative bg-white dark:bg-neutral-950 transition-colors duration-500">
+            <div class="max-w-7xl mx-auto relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+                    <!-- Intro FAQ -->
+                    <div class="lg:col-span-5">
+                        <span class="reveal text-xs font-bold uppercase tracking-widest text-gold-600 dark:text-gold-500 mb-2 block transition-colors duration-500">Dúvidas</span>
+                        <h2 class="reveal stagger-1 text-3xl md:text-5xl font-display font-bold text-neutral-900 dark:text-white mb-6 leading-tight">
+                            Perguntas<br>Frequentes
+                        </h2>
+                        <p class="reveal stagger-2 text-lg text-gray-600 dark:text-gray-400 mb-10 leading-relaxed">
+                            Tudo o que você precisa saber antes de fechar negócio para transformar sua presença digital.
+                        </p>
+                        <a href="https://wa.me/5517991744797" target="_blank" class="reveal stagger-3 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gold-500 text-white font-bold hover:bg-gold-600 transition-all shadow-lg shadow-gold-500/20 group">
+                            Outra dúvida? Pergunte
+                            <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+
+                    <!-- FAQ List -->
+                    <div class="lg:col-span-7 space-y-4">
+                        <div class="reveal stagger-2">
+                    <!-- FAQ 1 -->
+                    <details class="group bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-800 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-gold-500/30 mb-4">
+                        <summary class="flex items-center justify-between p-4 cursor-pointer">
+                            <span class="text-base font-bold text-neutral-900 dark:text-white group-open:text-gold-600 transition-colors">O site inclui hospedagem e domínio?</span>
+                            <span class="transition-transform duration-300 text-gold-500">
+                                <svg class="w-5 h-5 group-open:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                <svg class="w-5 h-5 hidden group-open:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6"></path></svg>
+                            </span>
+                        </summary>
+                        <div class="faq-answer px-4 text-base text-gray-600 dark:text-gray-400 leading-relaxed border-gray-100 dark:border-neutral-800/50">
+                            Sim, nós entregamos tudo <strong>pronto para você</strong>. 
+                        </div>
+                    </details>
+
+                    <!-- FAQ 2 -->
+                    <details class="group bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-800 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-gold-500/30 mb-4">
+                        <summary class="flex items-center justify-between p-4 cursor-pointer">
+                            <span class="text-base font-bold text-neutral-900 dark:text-white group-open:text-gold-600 transition-colors">Quanto tempo leva para ficar pronto?</span>
+                            <span class="transition-transform duration-300 text-gold-500">
+                                <svg class="w-5 h-5 group-open:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                <svg class="w-5 h-5 hidden group-open:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6"></path></svg>
+                            </span>
+                        </summary>
+                        <div class="faq-answer px-4 text-base text-gray-600 dark:text-gray-400 leading-relaxed border-gray-100 dark:border-neutral-800/50">
+                            O tempo de entrega varia de acordo com o que foi solicitado, pois o prazo é determinado pela complexidade do projeto. Em média, o desenvolvimento leva de 7 a 20 dias úteis para um trabalho bem feito.
+                        </div>
+                    </details>
+
+                    <!-- FAQ 3 -->
+                    <details class="group bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-800 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-gold-500/30 mb-4">
+                        <summary class="flex items-center justify-between p-4 cursor-pointer">
+                            <span class="text-base font-bold text-neutral-900 dark:text-white group-open:text-gold-600 transition-colors">Eu consigo atualizar o site depois?</span>
+                            <span class="transition-transform duration-300 text-gold-500">
+                                <svg class="w-5 h-5 group-open:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                <svg class="w-5 h-5 hidden group-open:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6"></path></svg>
+                            </span>
+                        </summary>
+                        <div class="faq-answer px-4 text-base text-gray-600 dark:text-gray-400 leading-relaxed border-gray-100 dark:border-neutral-800/50">
+                            Com certeza! Se você quer autonomia para trocar uma foto ou atualizar um preço, podemos incluir um painel super fácil de usar. <strong>Só não esquece de avisar a gente na hora do orçamento, beleza?</strong> Assim garantimos que o site fique exatamente como você precisa.
+                        </div>
+                    </details>
+
+                    <!-- FAQ 4 -->
+                    <details class="group bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-800 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-gold-500/30 mb-4">
+                        <summary class="flex items-center justify-between p-4 cursor-pointer">
+                            <span class="text-base font-bold text-neutral-900 dark:text-white group-open:text-gold-600 transition-colors">Vocês oferecem suporte após a entrega?</span>
+                            <span class="transition-transform duration-300 text-gold-500">
+                                <svg class="w-5 h-5 group-open:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                <svg class="w-5 h-5 hidden group-open:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6"></path></svg>
+                            </span>
+                        </summary>
+                        <div class="faq-answer px-4 text-base text-gray-600 dark:text-gray-400 leading-relaxed border-gray-100 dark:border-neutral-800/50">
+                            Sim. Todos os projetos incluem <strong>30 dias de suporte gratuito</strong>. Após esse período, caso algo aconteça, entre em contato conosco para resolvermos da melhor forma possível.
+                        </div>
+                    </details>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section-observe py-24 px-4 md:px-8 w-full relative bg-gradient-to-b from-white to-gray-50 dark:from-neutral-950 dark:to-black overflow-hidden transition-colors duration-500 border-t border-gray-100 dark:border-neutral-900">
+            <!-- Background FX with Parallax ID -->
+            <div id="contact-bg" class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_50%,rgba(234,179,8,0.05),transparent)] dark:bg-[radial-gradient(circle_at_70%_50%,rgba(234,179,8,0.03),transparent)] pointer-events-none will-change-transform"></div>
+            
+            <div class="w-full relative z-10 text-center">
+                <h2 class="reveal text-4xl md:text-5xl font-display font-bold text-neutral-900 dark:text-white mb-6 transition-colors duration-500">
+                    Vamos tirar seu projeto do papel?
+                </h2>
+                <p class="reveal stagger-1 text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-10 max-w-2xl mx-auto transition-colors duration-500">
+                    Estamos prontos para levar sua empresa para o próximo nível digital com soluções sob medida. 
+                    Solicite um orçamento personalizado diretamente pelo WhatsApp.
+                </p>
+
+                <a href="https://wa.me/5517991744797?text=Ol%C3%A1%2C%20gostaria%20de%20fazer%20um%20or%C3%A7amento%20para%20um%20projeto." target="_blank" rel="noopener noreferrer" class="reveal stagger-2 inline-block">
+                    <div class="relative inline-flex items-center justify-center font-display font-bold tracking-wide transition-all duration-300 rounded-lg px-8 py-4 focus:outline-none focus:ring-2 focus:ring-offset-2 transform active:scale-95 overflow-hidden group bg-transparent border-2 border-neutral-800 dark:border-gray-200 text-neutral-800 dark:text-gray-100 hover:bg-[#25D366] hover:border-[#25D366] hover:text-white dark:hover:bg-[#25D366] dark:hover:border-[#25D366] dark:hover:text-white shadow-sm hover:shadow-lg text-lg">
+                        <span class="relative flex items-center">
+                            <svg class="mr-3 h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.506-.669-.516-.173-.009-.371-.009-.57-.009-.198 0-.52.074-.792.372-.272.297-1.04 1.017-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                            Faça seu Orçamento
+                        </span>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Project Details Modal -->
+    <div id="project-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4 transition-opacity duration-300 opacity-0">
+        <div id="project-modal-content" class="relative max-w-4xl w-full bg-white dark:bg-neutral-900 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-2xl overflow-hidden transition-transform duration-300 scale-95 max-h-[90vh] flex flex-col">
+            <!-- Close Button -->
+            <button id="project-modal-close" class="absolute top-3 right-3 z-[60] p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all" aria-label="Fechar projeto">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <div class="overflow-y-auto">
+                <!-- Modal Body: Content -->
+                <div class="p-8 md:p-10">
+                    <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
+                        <h2 id="project-modal-title" class="text-3xl md:text-4xl font-display font-bold text-neutral-900 dark:text-white"></h2>
+                    </div>
+
+                    <!-- Case Study Details -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <!-- Challenge Box -->
+                        <div class="bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 rounded-xl p-6">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg text-red-600 dark:text-red-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                </div>
+                                <h4 class="font-bold text-lg text-red-900 dark:text-red-200">O Desafio</h4>
+                            </div>
+                            <p id="project-modal-challenge" class="text-sm text-red-800 dark:text-red-300/80 leading-relaxed"></p>
+                        </div>
+
+                        <!-- Solution Box -->
+                        <div class="bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30 rounded-xl p-6">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg text-emerald-600 dark:text-emerald-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <h4 class="font-bold text-lg text-emerald-900 dark:text-emerald-200">A Solução</h4>
+                            </div>
+                            <p id="project-modal-solution" class="text-sm text-emerald-800 dark:text-emerald-300/80 leading-relaxed"></p>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Section -->
+                    <div class="mt-4">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                            <h4 class="text-lg font-bold text-neutral-900 dark:text-white">Demonstração Visual</h4>
+
+                            <!-- Light/Dark Toggle for Project Photos -->
+                            <div id="project-theme-toggle" class="flex p-1 bg-gray-100 dark:bg-neutral-800 rounded-lg w-fit">
+                                <button id="proj-mode-light" class="p-2 rounded-md transition-all duration-300" aria-label="Ver modo claro">
+                                    <svg id="proj-icon-sun" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                    </svg>
+                                </button>
+                                <button id="proj-mode-dark" class="p-2 rounded-md transition-all duration-300" aria-label="Ver modo escuro">
+                                    <svg id="proj-icon-moon" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Horizontal Slider Container -->
+                        <div class="relative group mb-4">
+                            <button id="proj-gallery-prev" class="absolute left-0 top-1/2 -translate-y-1/2 z-40 p-2 md:p-3 rounded-full bg-white/90 dark:bg-neutral-900/90 shadow-lg text-neutral-900 dark:text-neutral-100 hover:text-gold-600 focus:outline-none transition-all disabled:opacity-0 disabled:pointer-events-none border border-neutral-200/50 dark:border-neutral-800/50 backdrop-blur-sm hover:shadow-xl hover:bg-white dark:hover:bg-neutral-900 hover:border-gold-500/50" aria-label="Anterior">
+                                <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <button id="proj-gallery-next" class="absolute right-0 top-1/2 -translate-y-1/2 z-40 p-2 md:p-3 rounded-full bg-white/90 dark:bg-neutral-900/90 shadow-lg text-neutral-900 dark:text-neutral-100 hover:text-gold-600 focus:outline-none transition-all disabled:opacity-0 disabled:pointer-events-none border border-neutral-200/50 dark:border-neutral-800/50 backdrop-blur-sm hover:shadow-xl hover:bg-white dark:hover:bg-neutral-900 hover:border-gold-500/50" aria-label="Próximo">
+                                <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                            <div id="project-modal-gallery" class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 scroll-smooth cursor-grab active:cursor-grabbing px-12">
+                                <!-- Images will be injected here by JS -->
+                            </div>
+                            <div class="text-center text-xs text-gray-400">Clique nas fotos para ampliar</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-neutral-950 border-t border-gray-200 dark:border-neutral-900 py-12 px-6 transition-colors duration-500">
+        <div class="w-full flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="text-center md:text-left">
+                <span class="text-xl font-display font-bold text-neutral-900 dark:text-white transition-colors duration-500">
+                    FLDevs - Bebedouro<span class="text-gold-600">.</span>
+                </span>
+                <p class="text-sm text-gray-500 mt-2">
+                    © <span id="year"></span> Todos os direitos reservados.
+                </p>
+            </div>
+
+            <div class="flex items-center space-x-6">
+                <a href="mailto:contato.fldevs@gmail.com" class="transition-transform duration-300 hover:scale-110" aria-label="E-mail">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <defs>
+                            <linearGradient id="gmail-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#4285F4" />
+                                <stop offset="25%" stop-color="#EA4335" />
+                                <stop offset="50%" stop-color="#FBBC04" />
+                                <stop offset="100%" stop-color="#34A853" />
+                            </linearGradient>
+                        </defs>
+                        <g class="[stroke:url(#gmail-gradient)]">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </g>
+                    </svg>
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61586361357155" target="_blank" rel="noopener noreferrer" class="transition-transform duration-300 hover:scale-110" aria-label="Facebook">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24">
+                        <defs>
+                            <linearGradient id="facebook-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#1877F2" />
+                                <stop offset="100%" stop-color="#005aee" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="24" height="24" rx="5" fill="url(#facebook-gradient)"></rect>
+                        <path fill="white" d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
+                    </svg>
+                </a>
+                <a href="https://www.instagram.com/fl.devs/" target="_blank" rel="noopener noreferrer" class="transition-transform duration-300 hover:scale-110" aria-label="Instagram">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <defs>
+                            <linearGradient id="insta-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#f9ce34" />
+                                <stop offset="50%" stop-color="#ee2a7b" />
+                                <stop offset="100%" stop-color="#6228d7" />
+                            </linearGradient>
+                        </defs>
+                        <g class="[stroke:url(#insta-gradient)]">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke-width="2"></rect>
+                            <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" stroke-width="2"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="2"></line>
+                        </g>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Backdrop (Fundo Escurecido) -->
+    <div id="menu-backdrop" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[140] transition-opacity duration-500 opacity-0 md:hidden"></div>
+
+    <!-- Mobile Menu Sidebar -->
+    <div id="mobile-menu" class="hidden fixed inset-y-0 right-0 w-[85%] max-w-[320px] z-[150] bg-white dark:bg-neutral-950 p-6 pt-10 flex flex-col shadow-2xl md:hidden translate-x-full transform-gpu will-change-transform transition-transform duration-500 ease-in-out pointer-events-none">
+        <!-- Botão de Fechar Interno -->
+        <div class="flex justify-end mb-4">
+            <button id="close-menu-internal" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-900 text-gray-600 dark:text-gray-400 transition-colors" aria-label="Fechar menu">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        
+        <div class="flex flex-col space-y-2">
+            <a href="#projects" class="text-xl font-display font-bold text-gray-900 dark:text-white py-4 px-4 -mx-4 rounded-xl mobile-link transition-all duration-200 hover:bg-gray-100 dark:hover:bg-neutral-900 flex items-center justify-between group">Projetos <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+            <a href="#testimonials" class="text-xl font-display font-bold text-gray-900 dark:text-white py-4 px-4 -mx-4 rounded-xl mobile-link transition-all duration-200 hover:bg-gray-100 dark:hover:bg-neutral-900 flex items-center justify-between group">Depoimentos <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+            <a href="#pricing" class="text-xl font-display font-bold text-gray-900 dark:text-white py-4 px-4 -mx-4 rounded-xl mobile-link transition-all duration-200 hover:bg-gray-100 dark:hover:bg-neutral-900 flex items-center justify-between group">Planos <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+            <a href="#faq" class="text-xl font-display font-bold text-gray-900 dark:text-white py-4 px-4 -mx-4 rounded-xl mobile-link transition-all duration-200 hover:bg-gray-100 dark:hover:bg-neutral-900 flex items-center justify-between group">FAQ <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+            <a href="#contact" class="text-xl font-display font-bold text-gray-900 dark:text-white py-4 px-4 -mx-4 rounded-xl mobile-link transition-all duration-200 hover:bg-gray-100 dark:hover:bg-neutral-900 flex items-center justify-between group">Contato <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-32 right-8 z-50 p-3 rounded-full bg-gold-600 text-white shadow-lg hover:bg-gold-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-gold-400 transition-all duration-300 opacity-0 translate-y-4 pointer-events-none" aria-label="Voltar ao topo">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+    </button>
+
+    <!-- Quiz Modal -->
+    <div id="quiz-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4 transition-opacity duration-300 opacity-0">
+        <div id="quiz-modal-content" class="relative max-w-6xl w-full transition-transform duration-300 scale-95">
+            
+            <!-- Moved Quiz Content -->
+            <div class="relative bg-white dark:bg-neutral-900 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-2xl overflow-hidden">
+                <!-- Close Button -->
+                <button id="quiz-modal-close" class="absolute top-4 right-4 z-30 p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white transition-all" aria-label="Fechar diagnóstico">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2">
+                    <!-- Left: Value Proposition -->
+                    <div class="p-8 md:p-12 flex flex-col justify-center space-y-6 relative z-10 border-b lg:border-b-0 lg:border-r border-gray-100 dark:border-neutral-800/50">
+                        <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 dark:text-white leading-[1.2]">
+                            Não sabe por onde começar?
+                            <br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-500 to-gold-700">Encontre a solução ideal.</span>
+                        </h2>
+                        <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+                            Responda nossas rápidas perguntas e descubra qual solução digital é a ideal para acelerar o crescimento da sua empresa.
+                        </p>
+                        <div class="pt-4">
+                            <div id="quiz-progress" class="flex items-center gap-4">
+                                <div class="w-full bg-gray-200 dark:bg-neutral-800 rounded-full h-2">
+                                    <div id="quiz-progress-bar" class="bg-gold-500 h-2 rounded-full transition-all duration-500" style="width: 0%;"></div>
+                                </div>
+                                    <span id="quiz-step-indicator" class="font-bold text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap shrink-0">Passo 1 de 5</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Quiz -->
+                    <div id="quiz-container" class="bg-gray-50 dark:bg-neutral-950/50 p-8 md:p-12 flex flex-col justify-center relative">
+                        <!-- Step 1 -->
+                        <div id="quiz-step-1" class="quiz-step active-step">
+                            <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-6">Qual é o seu tipo de negócio?</h3>
+                            <div class="space-y-4">
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step1" value="restaurante" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Restaurante / Lanchonete</span></label>
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step1" value="clinica" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Clínica / Dentista</span></label>
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step1" value="barbearia" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Barbearia / Salão</span></label>
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step1" value="escritorio" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Escritório / Advocacia</span></label>
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step1" value="outro" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Outro</span></label>
+                            </div>
+                        </div>
+                        <!-- Step 2 -->
+                        <div id="quiz-step-2" class="quiz-step">
+                            <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-6">Você precisa que clientes agendem horário?</h3>
+                            <div class="space-y-4">
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step2" value="sim" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Sim</span></label>
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step2" value="nao" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Não</span></label>
+                            </div>
+                        </div>
+                        <!-- Step 3 -->
+                        <div id="quiz-step-3" class="quiz-step">
+                            <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-6">Você vende produtos com variações e categorias?</h3>
+                            <div class="space-y-4">
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step3" value="sim" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Sim</span></label>
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step3" value="nao" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Não</span></label>
+                            </div>
+                        </div>
+                        <!-- Step 4 -->
+                        <div id="quiz-step-4" class="quiz-step">
+                            <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-6">Seu principal objetivo é:</h3>
+                            <div class="space-y-4">
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step4" value="whatsapp" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Receber mensagens no WhatsApp</span></label>
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step4" value="agenda" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Organizar agenda</span></label>
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step4" value="autoridade" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Mostrar autoridade</span></label>
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step4" value="vender" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Vender produtos online</span></label>
+                            </div>
+                        </div>
+                        <!-- Step 5 -->
+                        <div id="quiz-step-5" class="quiz-step">
+                            <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-6">Você já possui presença no Google?</h3>
+                            <div class="space-y-4">
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step5" value="sim" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Sim, e quero melhorar</span></label>
+                                <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800/50 has-[:checked]:border-gold-500 has-[:checked]:bg-gold-100/20 dark:has-[:checked]:bg-gold-900/10"><input type="radio" name="step5" value="nao" class="hidden peer"><span class="flex items-center text-neutral-800 dark:text-gray-200 peer-checked:font-bold peer-checked:text-gold-600">Não, quero começar</span></label>
+                            </div>
+                        </div>
+
+                        <!-- Result Display -->
+                        <div id="quiz-result-display" class="quiz-step">
+                            <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-2">Tendo em vista suas respostas, o melhor tipo de site para você é:</h3>
+                            <p id="quiz-recommendation" class="text-3xl font-bold text-gold-500 mb-6"></p>
+                        </div>
+
+                        <!-- Navigation -->
+                        <div class="mt-8 flex items-center justify-between">
+                            <button id="quiz-back-btn" class="text-sm font-bold text-gray-500 hover:text-neutral-900 dark:hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>&larr; Voltar</button>
+                            <button id="quiz-next-btn" class="px-6 py-2.5 rounded-lg bg-neutral-900 text-white font-bold hover:bg-neutral-700 dark:bg-white dark:text-neutral-900 dark:hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>Próximo</button>
+                            <div class="flex gap-3">
+                                <button id="quiz-restart-btn" class="hidden px-4 py-2.5 rounded-lg border border-gray-300 dark:border-neutral-700 text-gray-600 dark:text-gray-300 font-bold hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">Refazer</button>
+                                <a id="quiz-result-btn" href="#pricing" class="hidden px-6 py-2.5 rounded-lg bg-gold-500 text-white font-bold hover:bg-gold-600 transition-colors shadow-lg shadow-gold-500/20">Ver Planos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Image Viewer Modal -->
+    <div id="image-viewer-modal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black/95 backdrop-blur-md p-6 md:p-12 transition-opacity duration-300 opacity-0">
+        <div class="relative max-w-5xl w-full flex items-center justify-center group">
+            <!-- Navigation Arrows -->
+            <button id="image-viewer-prev" class="absolute left-[-2rem] md:left-[-4rem] top-1/2 -translate-y-1/2 z-[120] p-3 text-white hover:text-gold-500 transition-colors focus:outline-none" aria-label="Imagem anterior">
+                <svg class="w-8 h-8 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <button id="image-viewer-next" class="absolute right-[-2rem] md:right-[-4rem] top-1/2 -translate-y-1/2 z-[120] p-3 text-white hover:text-gold-500 transition-colors focus:outline-none" aria-label="Próxima imagem">
+                <svg class="w-8 h-8 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+
+            <!-- Red Close Button (X) attached to external top-right -->
+            <div class="relative inline-block border-4 border-neutral-200 dark:border-neutral-700 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-white dark:bg-neutral-900 overflow-visible">
+                <button id="image-viewer-close" class="absolute -top-5 -right-5 md:-top-6 md:-right-6 z-[130] p-2.5 rounded-full bg-red-600 text-white shadow-xl focus:outline-none" aria-label="Fechar imagem">
+                <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+                
+                <!-- Image Area -->
+                <div class="rounded-lg overflow-hidden flex items-center justify-center">
+                    <img id="image-viewer-img" src="" alt="Imagem expandida do projeto" class="max-w-full max-h-[75vh] object-contain block" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Logic: Date ---
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            // --- Logic: Theme Toggle ---
+            const toggleBtns = [document.getElementById('theme-toggle'), document.getElementById('theme-toggle-mobile')];
+            const html = document.documentElement;
+            
+            // Icons Containers
+            const iconSun = document.getElementById('icon-sun');
+            const iconMoon = document.getElementById('icon-moon');
+            const iconSunMobile = document.getElementById('icon-sun-mobile');
+            const iconMoonMobile = document.getElementById('icon-moon-mobile');
+
+            function applyTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                    
+                    // Animate Icons: Sun Visible, Moon Hidden
+                    iconSun.classList.remove('theme-icon-hidden');
+                    iconSun.classList.add('theme-icon-visible');
+                    iconMoon.classList.remove('theme-icon-visible');
+                    iconMoon.classList.add('theme-icon-hidden');
+
+                    iconSunMobile.classList.remove('theme-icon-hidden');
+                    iconSunMobile.classList.add('theme-icon-visible');
+                    iconMoonMobile.classList.remove('theme-icon-visible');
+                    iconMoonMobile.classList.add('theme-icon-hidden');
+
+                } else {
+                    html.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+
+                    // Animate Icons: Sun Hidden, Moon Visible
+                    iconSun.classList.remove('theme-icon-visible');
+                    iconSun.classList.add('theme-icon-hidden');
+                    iconMoon.classList.remove('theme-icon-hidden');
+                    iconMoon.classList.add('theme-icon-visible');
+
+                    iconSunMobile.classList.remove('theme-icon-visible');
+                    iconSunMobile.classList.add('theme-icon-hidden');
+                    iconMoonMobile.classList.remove('theme-icon-hidden');
+                    iconMoonMobile.classList.add('theme-icon-visible');
+                }
+            }
+
+            // Sync UI State with the Class List set in <head>
+            const isDarkInitially = html.classList.contains('dark');
+            applyTheme(isDarkInitially);
+            
+            let isDarkMode = isDarkInitially;
+
+            toggleBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    isDarkMode = !isDarkMode;
+                    applyTheme(isDarkMode);
+                });
+            });
+
+            // --- Logic: Navbar Scroll & Mobile Menu ---
+            const navbar = document.getElementById('navbar');
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuBackdrop = document.getElementById('menu-backdrop');
+            const closeMenuInternal = document.getElementById('close-menu-internal');
+            const iconMenu = document.getElementById('icon-menu');
+            const iconClose = document.getElementById('icon-close');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-white/70', 'dark:bg-neutral-950/70', 'backdrop-blur-lg', 'border-gray-200', 'dark:border-neutral-800', 'shadow-sm', 'py-3');
+                    navbar.classList.remove('bg-transparent', 'border-transparent', 'py-4');
+                } else {
+                    navbar.classList.remove('bg-white/70', 'dark:bg-neutral-950/70', 'backdrop-blur-lg', 'border-gray-200', 'dark:border-neutral-800', 'shadow-sm', 'py-3');
+                    navbar.classList.add('bg-transparent', 'border-transparent', 'py-4');
+                }
+            });
+
+            let isMenuOpen = false;
+            menuToggle.addEventListener('click', () => {
+                isMenuOpen = !isMenuOpen;
+                toggleMenu(isMenuOpen);
+            });
+
+            closeMenuInternal.addEventListener('click', () => {
+                isMenuOpen = false;
+                toggleMenu(false);
+            });
+
+            menuBackdrop.addEventListener('click', () => {
+                isMenuOpen = false;
+                toggleMenu(false);
+            });
+
+            function toggleMenu(open) {
+                if (open) {
+                    mobileMenu.classList.remove('hidden');
+                    menuBackdrop.classList.remove('hidden');
+                    // Pequeno timeout para permitir que o navegador registre a remoção do hidden antes da animação
+                    setTimeout(() => {
+                        mobileMenu.classList.remove('translate-x-full', 'pointer-events-none');
+                        mobileMenu.classList.add('translate-x-0', 'pointer-events-auto');
+                        menuBackdrop.classList.add('opacity-100');
+                    }, 10);
+                    
+                    iconMenu.classList.add('hidden');
+                    iconClose.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    mobileMenu.classList.add('translate-x-full', 'pointer-events-none');
+                    mobileMenu.classList.remove('translate-x-0', 'pointer-events-auto');
+                    menuBackdrop.classList.remove('opacity-100');
+                    
+                    iconMenu.classList.remove('hidden');
+                    iconClose.classList.add('hidden');
+                    document.body.style.overflow = '';
+
+                    // Espera a animação terminar para colocar o hidden de volta
+                    setTimeout(() => {
+                        if (!isMenuOpen) {
+                            mobileMenu.classList.add('hidden');
+                            menuBackdrop.classList.add('hidden');
+                        }
+                    }, 500);
+                }
+            }
+
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    isMenuOpen = false;
+                    toggleMenu(false);
+                });
+            });
+
+            // --- Logic: Parallax Effects ---
+            const parallaxElements = [
+                { id: 'hero-blob-1', speed: 0.15 },
+                { id: 'hero-blob-2', speed: -0.1 },
+                { id: 'contact-bg', speed: 0.05 }
+            ];
+
+            function animateParallax() {
+                const scrollY = window.scrollY;
+                
+                parallaxElements.forEach(el => {
+                    const element = document.getElementById(el.id);
+                    if (element) {
+                        // Apply transform3d for hardware acceleration
+                        // Using translate3d(0, y, 0) is efficient and promotes to GPU layer
+                        element.style.transform = `translate3d(0, ${scrollY * el.speed}px, 0)`;
+                    }
+                });
+                
+                requestAnimationFrame(animateParallax);
+            }
+            // Start Parallax Loop
+            requestAnimationFrame(animateParallax);
+
+            // --- Logic: Intersection Observer for Reveal Animations ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        entry.target.classList.remove('is-paused');
+                    } else {
+                        // Pausa a animação quando sai da tela para economizar CPU/Bateria
+                        entry.target.classList.add('is-paused');
+                    }
+                });
+            }, {
+                threshold: 0.05,
+                rootMargin: "0px"
+            });
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+
+            // --- Logic: Testimonials Carousel ---
+            const testimonialsData = [
+                { name: "Lucas Souza", role: "Barbearia 2M", text: "A gente perdia muito tempo respondendo WhatsApp pra agendar. Depois do sistema, os próprios clientes marcam o horário, qual corte vão querer, e em tempo real eu consigo abrir lugar na cadeira para não agendados cortarem.", stars: 5, image: "carlos-mendes.jpeg" },
+                { name: "Ana Souza", role: "Villa Real Imóveis", text: "No mercado de imóveis, a primeira impressão é tudo. O site que a FLDevs criou transmite exatamente o profissionalismo e a exclusividade que a gente precisava. É rápido, elegante e nossos clientes elogiam.", stars: 5, image: "ana-souza.jpeg" },
+                { name: "Roberto Ferreira", role: "Construtora Silva", text: "Controlar os custos de várias obras ao mesmo tempo era um desafio. Com o painel que eles criaram, agora eu vejo em tempo real onde cada centavo está indo. Isso facilitou demais nossas decisões e otimizou o lucro.", stars: 5, image: "roberto-ferreira.jpeg" },
+                { name: "José Mapra", role: "Oficina Mapra", text: "Precisava de uma página pra divulgar nossos serviços e um sisteminha simples para gerenciar os veiculos dos clientes. Eles fizeram rápido e o resultado foi surpreendente. O número de orçamentos que chegam e a organização que entram valeu cada centavo investido, recomendo!", stars: 5, image: "jose-mapra.jpeg" },
+                { name: "Cristina", role: "Nail Designer", text: "Minha agenda era uma loucura no caderno kkk. Agora, com o sistema de agendamento, minhas clientes marcam um horário, e tanto eu, quanto elas, somos alertadas com um lembrete 10min antes de cada sessão. Acabou a confusão e eu não me perco mais.", stars: 5, image: "nail.jpeg" },
+                { name: "Roberta C. Oliveira", role: "LashStudio", text: "Meu trabalho é muito visual, mas no Instagram eu não sentia muita diferença. Até que conheci os meninos da FLDevs, que me apresentaram um modelo de exibição diferente do instagram, funcionou como um portfólio interativo, mostrando a qualidade do meu trabalho consegui me destacar bastante na cidade.", stars: 5, image: "roberta.jpeg" },
+           ];
+
+            const sliderTrack = document.getElementById('slider-track');
+            const paginationContainer = document.getElementById('pagination');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            let currentIndex = 0;
+            let itemsPerView = 3;
+
+            // Render Testimonials
+            function renderStars(count) {
+                let html = '<div class="flex gap-1 text-gold-500 mb-6">';
+                for (let i = 0; i < 5; i++) {
+                    if (i < count) {
+                        html += '<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
+                    } else {
+                        html += '<svg class="w-5 h-5 fill-current opacity-30" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
+                    }
+                }
+                html += '</div>';
+                return html;
+            }
+
+            sliderTrack.innerHTML = testimonialsData.map((t) => `
+                <div class="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 p-3">
+                    <div class="testimonial-card bg-white dark:bg-neutral-900 p-8 rounded-2xl border border-gray-200 dark:border-neutral-800 relative hover:border-gold-500/30 hover:shadow-2xl hover:shadow-neutral-900/20 dark:hover:shadow-white/10 transition-all duration-500 h-full flex flex-col justify-between overflow-hidden">
+                        <div style="position: relative; z-index: 2;">
+                            ${renderStars(t.stars)}
+                            <p class="text-gray-600 dark:text-gray-300 italic leading-relaxed text-sm md:text-base mb-8 relative z-10">"${t.text}"</p>
+                        </div>
+                        <div class="flex items-center gap-4 mt-auto pt-6 border-t border-gray-100/50 dark:border-neutral-800/50 relative z-10">
+                            <img src="${t.image}" alt="${t.name}" class="w-14 h-14 rounded-full object-cover border-2 border-white/30 dark:border-neutral-700 shadow-lg" loading="lazy">
+                            <div>
+                                <h4 class="font-bold text-neutral-900 dark:text-white text-base">${t.name}</h4>
+                                <span class="text-xs font-semibold text-gold-600 uppercase tracking-wider block mt-1">${t.role}</span>
+                            </div>
+                        </div>
+                        <div style="position: absolute; top: -8px; right: 24px; font-family: 'Manrope', sans-serif; font-size: 96px; font-weight: 800; color: rgb(234, 179, 8, 0.08); line-height: 1; pointer-events: none; z-index: 1;">"</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Responsive Logic
+            function updateItemsPerView() {
+                if (window.innerWidth < 768) {
+                    itemsPerView = 1;
+                } else if (window.innerWidth < 1024) {
+                    itemsPerView = 2;
+                } else {
+                    itemsPerView = 3;
+                }
+                // Garante que o índice atual seja válido para a nova visualização
+                if (currentIndex > testimonialsData.length - itemsPerView) {
+                    currentIndex = Math.max(0, testimonialsData.length - itemsPerView);
+                }
+                updateSlider();
+                renderPagination();
+            }
+
+            function updateSlider() {
+                const percentage = -(currentIndex * (100 / itemsPerView));
+                sliderTrack.style.transform = `translateX(${percentage}%)`;
+                
+                // Update dots
+                const dots = document.querySelectorAll('.pagination-dot');
+                dots.forEach((dot, idx) => {
+                    const activePageIndex = Math.round(currentIndex / itemsPerView);
+                    if (idx === activePageIndex) { 
+                       dot.classList.add('bg-gold-600', 'w-6'); 
+                       dot.classList.remove('bg-gray-300', 'dark:bg-neutral-700');
+                    } else {
+                       dot.classList.remove('bg-gold-600', 'w-6');
+                       dot.classList.add('bg-gray-300', 'dark:bg-neutral-700');
+                    }
+                });
+
+                // Update button states
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex >= testimonialsData.length - itemsPerView;
+            }
+            
+            function renderPagination() {
+
+                // Simplified Pagination: Just one dot per "page" of content
+                const pages = Math.ceil(testimonialsData.length / itemsPerView);
+                let html = '';
+                for(let i=0; i < pages; i++) {
+                    html += `<button class="pagination-dot w-2 h-2 rounded-full bg-gray-300 dark:bg-neutral-700 transition-all duration-300" data-index="${i * itemsPerView}"></button>`;
+                }
+                paginationContainer.innerHTML = html;
+
+                document.querySelectorAll('.pagination-dot').forEach(dot => {
+                    dot.addEventListener('click', (e) => {
+                        currentIndex = parseInt(e.target.dataset.index);
+                        // clamp
+                        if(currentIndex > testimonialsData.length - itemsPerView) currentIndex = testimonialsData.length - itemsPerView;
+                        updateSlider();
+                    });
+                });
+                
+                updateSlider(); // Set initial active dot
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (currentIndex < testimonialsData.length - itemsPerView) {
+                    currentIndex++;
+                    updateSlider();
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateSlider();
+                }
+            });
+
+            // Touch events for mobile swipe
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            sliderTrack.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, {passive: true});
+
+            sliderTrack.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, {passive: true});
+
+            function handleSwipe() {
+                // Threshold for swipe (e.g. 50px)
+                if (touchEndX < touchStartX - 50) {
+                    // Swiped Left (Next)
+                    if (currentIndex < testimonialsData.length - itemsPerView) {
+                        currentIndex++;
+                        updateSlider();
+                    }
+                }
+                if (touchEndX > touchStartX + 50) {
+                    // Swiped Right (Prev)
+                    if (currentIndex > 0) {
+                        currentIndex--;
+                        updateSlider();
+                    }
+                }
+            }
+
+            window.addEventListener('resize', updateItemsPerView);
+            updateItemsPerView(); // Initial call
+
+            // --- Logic: Interactive Quiz (Inline) ---
+            const quizContainer = document.getElementById('quiz-container');
+            if (quizContainer) {
+                const steps = [document.getElementById('quiz-step-1'), document.getElementById('quiz-step-2'), document.getElementById('quiz-step-3'), document.getElementById('quiz-step-4'), document.getElementById('quiz-step-5'), document.getElementById('quiz-result-display')];
+                const nextBtn = document.getElementById('quiz-next-btn');
+                const backBtn = document.getElementById('quiz-back-btn');
+                const restartBtn = document.getElementById('quiz-restart-btn');
+                const progressBar = document.getElementById('quiz-progress-bar');
+                const stepIndicator = document.getElementById('quiz-step-indicator');
+
+                let currentStep = 0;
+                const totalQuestions = 5;
+                let answers = {};
+
+                function updateQuizUI() {
+                    // Update steps visibility
+                    steps.forEach((step, index) => {
+                        step.classList.toggle('active-step', index === currentStep);
+                    });
+
+                    // Update progress bar and indicator
+                    const progress = currentStep >= totalQuestions ? 100 : (currentStep / totalQuestions) * 100;
+                    progressBar.style.width = `${progress}%`;
+                    if (currentStep < totalQuestions) {
+                        stepIndicator.textContent = `Passo ${currentStep + 1} de ${totalQuestions}`;
+                        stepIndicator.style.display = 'block';
+                    } else {
+                        stepIndicator.style.display = 'none';
+                    }
+
+                    // Update button states
+                    backBtn.disabled = currentStep === 0;
+                    if (currentStep < totalQuestions) {
+                        nextBtn.disabled = !answers[`step${currentStep + 1}`];
+                    }
+                    
+                    if (currentStep === totalQuestions - 1) {
+                        nextBtn.textContent = 'Ver Resultado';
+                    } else {
+                        nextBtn.textContent = 'Próximo';
+                    }
+
+                    if (currentStep >= totalQuestions) {
+                        nextBtn.classList.add('hidden');
+                        backBtn.classList.add('hidden');
+                        restartBtn.classList.remove('hidden');
+                        document.getElementById('quiz-result-btn').classList.remove('hidden');
+                        calculateResult();
+                    } else {
+                        nextBtn.classList.remove('hidden');
+                        backBtn.classList.remove('hidden');
+                        restartBtn.classList.add('hidden');
+                        document.getElementById('quiz-result-btn').classList.add('hidden');
+                    }
+                }
+
+                function calculateResult() {
+                    const { step1: businessType, step2: needsBooking, step3: sellsProducts, step4: mainGoal } = answers;
+                    let recommendation = 'Portfólio Digital'; // Padrão atualizado
+
+                    // Lógica para Sistemas Web (Automação/Agendamento)
+                    if (needsBooking === 'sim' || 
+                        mainGoal === 'agenda' || 
+                        ['clinica', 'barbearia', 'restaurante'].includes(businessType)) {
+                        recommendation = 'Sistemas Web';
+                    }
+
+                    document.getElementById('quiz-recommendation').textContent = recommendation;
+                }
+
+                quizContainer.addEventListener('change', (e) => {
+                    if (e.target.name && e.target.name.startsWith('step')) {
+                        answers[e.target.name] = e.target.value;
+                        updateQuizUI();
+                    }
+                });
+
+                nextBtn.addEventListener('click', () => { if (currentStep < steps.length - 1) currentStep++; updateQuizUI(); });
+                backBtn.addEventListener('click', () => { if (currentStep > 0) currentStep--; updateQuizUI(); });
+                restartBtn.addEventListener('click', () => { 
+                    currentStep = 0;
+                    // Clear radio buttons
+                    quizContainer.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+                    answers = {}; 
+                    updateQuizUI(); 
+                });
+
+                // Initial state
+                updateQuizUI();
+            }
+
+            // --- Logic: Project Modal ---
+            const projectData = {
+                '1': {
+                    title: 'DiSteffano Barbearia',
+                    challenge: 'A barbearia perdia faturamento por não conseguir gerir a demanda via WhatsApp durante os atendimentos. O resultado era uma agenda caótica, clientes esquecendo horários e uma imagem profissional prejudicada pela demora nas respostas.',
+                    solution: 'Desenvolvemos uma solução personalizada focada em resolver a perda de clientes no atendimento manual. A nova página de agendamento melhorou drasticamente tanto a qualidade do atendimento quanto a organização interna.',
+                    gallery: {
+                        light: ['Barber_light (1).png', 'Barber_light (2).png', 'Barber_light (3).png', 'Barber_light (4).png'],
+                        dark: ['Barber (1).png', 'Barber (2).png', 'Barber (3).png', 'Barber (4).png']
+                    }
+                },
+                '2': {
+                    title: 'FR Fernando & Rodrigo',
+                    challenge: 'A oficina operava sem processos definidos e dependia de anotações manuais, o que impossibilitava o rastreio de peças no estoque e o acesso ao histórico de manutenção dos veículos, gerando insegurança na gestão e perda de faturamento.',
+                    solution: 'Implementamos um ecossistema digital que estabeleceu processos claros de trabalho. O sistema agora centraliza o histórico completo de cada veículo, automatiza a baixa de estoque e fornece relatórios financeiros precisos, entregando o controle estratégico total do negócio para os proprietários.',
+                    gallery: {
+                        light: ['fr_light (1).png', 'fr_light (2).png', 'fr_light (3).png', 'fr_light (4).png'],
+                        dark: ['fr (1).png', 'fr (2).png', 'fr (3).png', 'fr (4).png']
+                    }
+                },
+                '3': {
+                    title: 'Bella Studio',
+                    challenge: 'O excesso de mensagens de "curiosos" no Direct consumia horas produtivas da profissional. A falta de uma central de informações clara resultava em baixa conversão e muitas desistências por demora no atendimento manual.',
+                    solution: 'Desenvolvemos uma Landing Page com copy estratégica e design focado em autoridade. Implementamos um fluxo que filtra interessados e prioriza clientes decididos, otimizando o tempo da profissional e garantindo faturamento antecipado através de taxas de reserva.',
+                    gallery: {
+                        light: ['nail (1).png', 'nail (2).png', 'nail (3).png', 'nail (4).png'],
+                        dark: ['nail (1).png', 'nail (2).png', 'nail (3).png', 'nail (4).png']
+                    }
+                }
+            };
+
+            const projectModal = document.getElementById('project-modal');
+            const projectModalContent = document.getElementById('project-modal-content');
+            const closeProjectModalBtn = document.getElementById('project-modal-close');
+            const projectCards = document.querySelectorAll('.project-card');
+            const btnProjLight = document.getElementById('proj-mode-light');
+            const btnProjDark = document.getElementById('proj-mode-dark');
+            const projIconSun = document.getElementById('proj-icon-sun');
+            const projIconMoon = document.getElementById('proj-icon-moon');
+
+            const projGalleryPrevBtn = document.getElementById('proj-gallery-prev');
+            const projGalleryNextBtn = document.getElementById('proj-gallery-next');
+
+            const projectIds = Object.keys(projectData);
+            
+            let activeProjectId = null;
+            let activeProjectTheme = 'dark'; // Default starting theme for previews
+
+            function updateGalleryNavButtons() {
+                const galleryContainer = document.getElementById('project-modal-gallery');
+                if (projGalleryPrevBtn && projGalleryNextBtn && galleryContainer) {
+                    projGalleryPrevBtn.disabled = galleryContainer.scrollLeft <= 0;
+                    // Allow a small tolerance for floating point issues or partial scrolls
+                    projGalleryNextBtn.disabled = galleryContainer.scrollLeft + galleryContainer.clientWidth >= galleryContainer.scrollWidth - 5;
+                }
+            }
+
+            function updateGallery() {
+                const data = projectData[activeProjectId];
+                const galleryContainer = document.getElementById('project-modal-gallery');
+                const images = data.gallery[activeProjectTheme];
+
+                // Update UI Buttons
+                if (activeProjectTheme === 'light') {
+                    btnProjLight.className = "p-2 rounded-md bg-white dark:bg-neutral-700 shadow-sm transition-all duration-300";
+                    projIconSun.classList.add('text-gold-500'); // Sol Laranjado/Dourado
+                    projIconMoon.classList.remove('text-white');
+                    btnProjDark.className = "p-2 rounded-md text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-all duration-300";
+                } else {
+                    btnProjDark.className = "p-2 rounded-md bg-white dark:bg-neutral-700 shadow-sm transition-all duration-300";
+                    projIconMoon.classList.add('text-white');
+                    projIconSun.classList.remove('text-gold-500');
+                    btnProjLight.className = "p-2 rounded-md text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-all duration-300";
+                }
+
+                galleryContainer.innerHTML = images.map(imgSrc => `
+                    <div class="flex-shrink-0 w-[85%] md:w-[70%] snap-center">
+                        <div class="project-gallery-image-wrapper bg-white dark:bg-neutral-800 p-1.5 rounded-xl shadow-lg border border-gray-200 dark:border-neutral-700/50 cursor-pointer">
+                            <img src="${imgSrc}" alt="Preview do projeto" class="w-full h-72 object-cover rounded-lg" loading="lazy"> <!-- Fixed height h-72 -->
+                        </div>
+                    </div>
+                `).join('');
+                
+                galleryContainer.scrollLeft = 0;
+                updateGalleryNavButtons(); // Update button states after rendering
+
+                // Re-bind image click listeners
+                const wrappers = galleryContainer.querySelectorAll('.project-gallery-image-wrapper');
+                wrappers.forEach((wrapper, index) => {
+                    wrapper.onclick = () => openImageViewer(index, images);
+                });
+            }
+
+            function openProjectModal(projectId) {
+                const data = projectData[projectId];
+                if (!data) return;
+
+                activeProjectId = projectId;
+                
+                const themeToggleContainer = document.getElementById('project-theme-toggle');
+                if (projectId === '3') {
+                    themeToggleContainer.classList.add('hidden');
+                    activeProjectTheme = 'light';
+                } else {
+                    themeToggleContainer.classList.remove('hidden');
+                    activeProjectTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                }
+                // Ensure icons are reset before updateGallery applies new styles
+                projIconSun.classList.remove('text-gold-600');
+                projIconMoon.classList.remove('text-white');
+
+                document.getElementById('project-modal-title').textContent = data.title;
+                document.getElementById('project-modal-challenge').textContent = data.challenge;
+                document.getElementById('project-modal-solution').textContent = data.solution;
+
+                updateGallery();
+                
+                // Show Modal
+                projectModal.classList.remove('hidden');
+                projectModal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => {
+                    projectModal.classList.remove('opacity-0');
+                    projectModalContent.classList.remove('scale-95');
+                    updateGalleryNavButtons(); // Atualiza as setas após o modal estar visível
+                }, 20);
+            }
+
+            function closeProjectModal() {
+                projectModal.classList.add('opacity-0');
+                projectModalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    projectModal.classList.add('hidden');
+                    projectModal.classList.remove('flex');
+                    document.body.style.overflow = '';
+                }, 300);
+            }
+
+            projectCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const projectId = card.getAttribute('data-project-id');
+                    openProjectModal(projectId);
+                });
+            });
+
+            btnProjLight.addEventListener('click', () => {
+                activeProjectTheme = 'light';
+                updateGallery();
+            });
+
+            btnProjDark.addEventListener('click', () => {
+                activeProjectTheme = 'dark';
+                updateGallery();
+            });
+
+            projGalleryNextBtn.addEventListener('click', () => {
+                const galleryContainer = document.getElementById('project-modal-gallery');
+                const firstImage = galleryContainer.querySelector('.flex-shrink-0');
+                if (firstImage) {
+                    const scrollAmount = firstImage.offsetWidth + 16; // image width + gap-4
+                    galleryContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                }
+            });
+
+            projGalleryPrevBtn.addEventListener('click', () => {
+                const galleryContainer = document.getElementById('project-modal-gallery');
+                const firstImage = galleryContainer.querySelector('.flex-shrink-0');
+                if (firstImage) {
+                    const scrollAmount = firstImage.offsetWidth + 16; // image width + gap-4
+                    galleryContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                }
+            });
+
+            document.getElementById('project-modal-gallery').addEventListener('scroll', updateGalleryNavButtons);
+
+            closeProjectModalBtn.addEventListener('click', closeProjectModal);
+            projectModal.addEventListener('click', (e) => {
+                if (e.target === projectModal) {
+                    closeProjectModal();
+                }
+            });
+
+            // --- Logic: Image Viewer Modal ---
+            const imageViewerModal = document.getElementById('image-viewer-modal');
+            const imageViewerImg = document.getElementById('image-viewer-img');
+            const imageViewerCloseBtn = document.getElementById('image-viewer-close');
+            const imageViewerPrevBtn = document.getElementById('image-viewer-prev');
+            const imageViewerNextBtn = document.getElementById('image-viewer-next');
+
+            let viewerImages = [];
+            let viewerIndex = 0;
+
+            function updateViewerImage() {
+                if (viewerImages.length > 0) {
+                    imageViewerImg.src = viewerImages[viewerIndex];
+                }
+            }
+
+            function openImageViewer(index, images) {
+                viewerImages = images;
+                viewerIndex = index;
+                updateViewerImage();
+                imageViewerModal.classList.remove('hidden');
+                imageViewerModal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => {
+                    imageViewerModal.classList.remove('opacity-0');
+                }, 20);
+            }
+
+            function closeImageViewer() {
+                imageViewerModal.classList.add('opacity-0');
+                setTimeout(() => {
+                    imageViewerModal.classList.add('hidden');
+                    imageViewerModal.classList.remove('flex');
+                    imageViewerImg.src = ''; // Clear image src
+                    viewerImages = [];
+                    // Só remove o lock se o modal de projeto também estiver fechado
+                    if (projectModal.classList.contains('hidden')) {
+                        document.body.style.overflow = '';
+                    }
+                }, 300);
+            }
+
+            imageViewerNextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                viewerIndex = (viewerIndex + 1) % viewerImages.length;
+                updateViewerImage();
+            });
+
+            imageViewerPrevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                viewerIndex = (viewerIndex - 1 + viewerImages.length) % viewerImages.length;
+                updateViewerImage();
+            });
+
+            imageViewerCloseBtn.addEventListener('click', closeImageViewer);
+            imageViewerModal.addEventListener('click', (e) => {
+                // Close if clicked on the backdrop
+                if (e.target === imageViewerModal || e.target.id === 'image-viewer-modal-container') {
+                    closeImageViewer();
+                }
+            });
+
+            // Prevent scrolling of the main page when image viewer is open
+            // This is handled by the modal's fixed positioning and backdrop, but good to note.
+
+            // --- Logic: Quiz Modal ---
+            const quizModal = document.getElementById('quiz-modal');
+            const quizModalContent = document.getElementById('quiz-modal-content');
+            const openQuizBtn = document.getElementById('open-quiz-modal');
+            const closeQuizBtn = document.getElementById('quiz-modal-close');
+            const quizResultBtn = document.getElementById('quiz-result-btn'); // Button inside the quiz
+
+            function openModal() {
+                quizModal.classList.remove('hidden');
+                quizModal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => { // Allow display to change before starting transition
+                    quizModal.classList.remove('opacity-0');
+                    quizModalContent.classList.remove('scale-95');
+                }, 20);
+            }
+
+            function closeModal() {
+                quizModal.classList.add('opacity-0');
+                quizModalContent.classList.add('scale-95');
+                setTimeout(() => { // Hide after transition
+                    quizModal.classList.add('hidden');
+                    quizModal.classList.remove('flex');
+                    document.body.style.overflow = '';
+                }, 300);
+            }
+
+            if (openQuizBtn) {
+                openQuizBtn.addEventListener('click', openModal);
+            }
+            closeQuizBtn.addEventListener('click', closeModal);
+            quizResultBtn.addEventListener('click', closeModal); // Close modal when user clicks "Quero esse modelo"
+            quizModal.addEventListener('click', (e) => { if (e.target === quizModal) closeModal(); }); // Close on overlay click
+
+            // --- Logic: Back to Top Button ---
+            const backToTopButton = document.getElementById('back-to-top');
+            if (backToTopButton) {
+                window.addEventListener('scroll', () => {
+                    // Verifica se o usuário chegou ao fim da página (com margem de 50px)
+                    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50) {
+                        backToTopButton.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+                    } else {
+                        backToTopButton.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+                    }
+                });
+                backToTopButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            }
+
+        });
+    </script>
+</body>
+</html> 
